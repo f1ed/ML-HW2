@@ -110,7 +110,7 @@ def _cross_entropy_loss(y_pred, Y_label):
     #          y_pred: predictions, float vector
     #          Y_label: truth labels, bool vector
     cross_entropy = - np.dot(Y_label.T, np.log(y_pred)) - np.dot((1 - Y_label).T, np.log(1 - y_pred))
-    return cross_entropy[0]
+    return cross_entropy[0][0]
 
 
 def _gradient(X, Y_label, w, b):
@@ -130,12 +130,12 @@ def _gradient(X, Y_label, w, b):
 w = np.zeros((data_dim, 1))
 b = np.float(0.)
 w_grad_sum = np.full((data_dim, 1), 0.1)  # avoid divided by zeros
-b_grad_sum = np.float(0.1)
+b_grad_sum = np.float(1e-8)
 
 # Some parameters for training
-epoch = 100
+epoch = 20
 batch_size = 2**3
-learning_rate = 0.3
+learning_rate = 0.2
 
 # Keep the loss and accuracy history at every epoch for plotting
 train_loss = []
@@ -161,8 +161,8 @@ for it in range(epoch):
         b_grad_sum = b_grad_sum + b_grad**2
         w_ada = np.sqrt(w_grad_sum)
         b_ada = np.sqrt(b_grad_sum)
-        w = w - learning_rate * w_grad / w_ada
-        b = b - learning_rate * b_grad / b_ada
+        w = w - learning_rate * w_grad / np.sqrt(w_grad_sum)
+        b = b - learning_rate * b_grad / np.sqrt(b_grad_sum)
 
     # compute loss and accuracy of training set and development set at every epoch
     y_train_pred = _f(X_train, w, b)
@@ -172,8 +172,8 @@ for it in range(epoch):
 
     y_dev_pred = _f(X_dev, w, b)
     Y_dev_pred = np.around(y_dev_pred)
-    dev_loss.append(_cross_entropy_loss(y_dev_pred, Y_dev_pred)/dev_size)
-    dev_acc.append(_accuracy(y_dev_pred, Y_dev_pred))
+    dev_loss.append(_cross_entropy_loss(y_dev_pred, Y_dev)/dev_size)
+    dev_acc.append(_accuracy(y_dev_pred, Y_dev))
 
 print('Training loss: {}'.format(train_loss[-1]))
 print('Training accuracy: {}'.format(train_acc[-1]))

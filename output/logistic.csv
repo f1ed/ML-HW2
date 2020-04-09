@@ -1,0 +1,10 @@
+In logistic model:
+
+Size of training set: 48830
+Size of development set: 5426
+Size of test set: 27622
+Dimension of data: 510
+Training loss: 0.27932258508845653
+Training accuracy: 0.8845996313741552
+Development loss: 0.298474025357916
+Development accuracy: 0.8336834130135942
