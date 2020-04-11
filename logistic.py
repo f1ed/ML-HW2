@@ -21,7 +21,7 @@ Y_train = Y_train[1:, 1:]
 X_test = X_test[1:, 1:]
 
 
-def _normaliztion(X, train=True, X_mean=None, X_std=None):
+def _normalization(X, train=True, X_mean=None, X_std=None):
     # This function normalize columns of X.
     # Output:
     #       X: normalized data
@@ -30,8 +30,7 @@ def _normaliztion(X, train=True, X_mean=None, X_std=None):
         X_mean = np.mean(X, axis=0)
         X_std = np.std(X, axis=0)
     for j in range(X.shape[1]):
-        if X_std[j] != 0:
-            X[:, j] = (X[:, j] - X_mean[j]) / X_std[j]
+        X[:, j] = (X[:, j] - X_mean[j]) / (X_std[j] + 1e-8)  # avoid X_std==0
     return X, X_mean, X_std
 
 
@@ -42,8 +41,8 @@ def _train_dev_split(X, Y, dev_ratio=0.25):
 
 
 # Normalize train_data and test_data
-X_train, X_mean, X_std = _normaliztion(X_train, train=True)
-X_test, _, _ = _normaliztion(X_test, train=False, X_mean=X_mean, X_std=X_std)
+X_train, X_mean, X_std = _normalization(X_train, train=True)
+X_test, _, _ = _normalization(X_test, train=False, X_mean=X_mean, X_std=X_std)
 
 # Split data into train data and development data
 dev_ratio = 0.1
@@ -83,11 +82,10 @@ def _f(X, w, b):
     #
     # Arguments:
     #   X: input data, shape = [batch_size, data_dimension]
-    #   w: weight vector, shape = [data_dimension]
+    #   w: weight vector, shape = [data_dimension, 1]
     #   b: bias, scalar
     # Output:
     #       predict probability of each row of X being positively labeled, shape = [batch_size, 1]
-    Z = np.dot(X, w) + b
     return _sigmod(np.dot(X, w) + b)
 
 
@@ -98,7 +96,7 @@ def _predict(X, w, b):
 
 def _accuracy(Y_pred, Y_label):
     # This function calculates prediction accuracy
-    # y_pred: 0 or 1
+    # Y_pred: 0 or 1
     acc = 1 - np.mean(np.abs(Y_pred - Y_label))
     return acc
 
@@ -198,6 +196,20 @@ plt.title('Accuracy')
 plt.legend()
 plt.savefig('./output/acc.png')
 plt.show()
+
+#################################
+# Predict
+predictions = _predict(X_test, w, b)
+f = open('./output/output_logistic.csv', 'w')
+sys.stdout = f
+print('id', 'label')
+for id, label in enumerate(predictions):
+    print('{}, {}'.format(id, label[0]))
+
+f.close()
+
+###############################
+# Output the weights and bias
 
 
 
