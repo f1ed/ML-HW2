@@ -10,11 +10,15 @@ import matplotlib.pyplot as plt
 
 ##########################################################
 # prepare data
-X_train = np.genfromtxt('./data/X_train', delimiter=',')
-Y_train = np.genfromtxt('./data/Y_train', delimiter=',')
-X_test = np.genfromtxt('./data/X_test', delimiter=',')
-f = open('./output/logistic.csv', 'w')
-sys.stdout = f
+X_train_fpath = './data/X_train'
+Y_train_fpath = './data/Y_Train'
+X_test_fpath = './data/X_test'
+output_fpath = './logistic_output/output_logistic.csv'
+fpath = './logistic_output/logistic'
+
+X_train = np.genfromtxt(X_train_fpath, delimiter=',')
+Y_train = np.genfromtxt(Y_train_fpath, delimiter=',')
+X_test = np.genfromtxt(X_test_fpath, delimiter=',')
 
 X_train = X_train[1:, 1:]
 Y_train = Y_train[1:, 1:]
@@ -53,11 +57,12 @@ dev_size = X_dev.shape[0]
 test_size = X_test.shape[0]
 data_dim = X_train.shape[1]
 
-print('In logistic model:\n')
-print('Size of training set:', train_size)
-print('Size of development set:', dev_size)
-print('Size of test set:', test_size)
-print('Dimension of data:', data_dim)
+with open(fpath, 'w') as f:
+    f.write('In logistic model:\n')
+    f.write('Size of Training set: {}\n'.format(train_size))
+    f.write('Size of development set: {}\n'.format(dev_size))
+    f.write('Size of test set: {}\n'.format(test_size))
+    f.write('Dimension of data: {}\n'.format(data_dim))
 
 
 np.random.seed(0)
@@ -173,12 +178,11 @@ for it in range(epoch):
     dev_loss.append(_cross_entropy_loss(y_dev_pred, Y_dev)/dev_size)
     dev_acc.append(_accuracy(y_dev_pred, Y_dev))
 
-print('Training loss: {}'.format(train_loss[-1]))
-print('Training accuracy: {}'.format(train_acc[-1]))
-print('Development loss: {}'.format(dev_loss[-1]))
-print('Development accuracy: {}'.format(dev_acc[-1]))
-
-f.close()
+with open(fpath, 'a') as f:
+    f.write('Training loss: {}\n'.format(train_loss[-1]))
+    f.write('Training accuracy: {}\n'.format(train_acc[-1]))
+    f.write('Development loss: {}\n'.format(dev_loss[-1]))
+    f.write('Development accuracy: {}\n'.format(dev_acc[-1]))
 
 ###################
 # Plotting Loss and accuracy curve
@@ -187,33 +191,32 @@ plt.plot(train_loss, label='train')
 plt.plot(dev_loss, label='dev')
 plt.title('Loss')
 plt.legend()
-plt.savefig('./output/loss.png')
+plt.savefig('./logistic_output/loss.png')
 plt.show()
 
 plt.plot(train_acc, label='train')
 plt.plot(dev_acc, label='dev')
 plt.title('Accuracy')
 plt.legend()
-plt.savefig('./output/acc.png')
+plt.savefig('./logistic_output/acc.png')
 plt.show()
 
 #################################
 # Predict
 predictions = _predict(X_test, w, b)
-f = open('./output/output_logistic.csv', 'w')
-sys.stdout = f
-print('id', 'label')
-for id, label in enumerate(predictions):
-    print('{}, {}'.format(id, label[0]))
-
-f.close()
+with open(output_fpath, 'w') as f:
+    f.write('id, label\n')
+    for id, label in enumerate(predictions):
+        f.write('{}, {}\n'.format(id, label[0]))
 
 ###############################
 # Output the weights and bias
+ind = (np.argsort(np.abs(w), axis=0)[::-1]).reshape(1, -1)
 
+with open(X_test_fpath) as f:
+    content = f.readline().strip('\n').split(',')
+content = content[1:]
 
-
-
-
-
-
+with open(fpath, 'a') as f:
+    for i in ind[0, 0: 10]:
+       f.write('{}: {}\n'.format(content[i], w[i]))

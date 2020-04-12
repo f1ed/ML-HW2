@@ -2,3 +2,6 @@ In generative model:
 Size of training data: 54256
 Size of test set: 27622
 Dimension of data: 510
+
+
+Training accuracy: 0.8756450899439694

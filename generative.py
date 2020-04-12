@@ -42,7 +42,7 @@ with open(fpath, 'w') as f:
     f.write('In generative model:\n')
     f.write('Size of training data: {}\n'.format(train_size))
     f.write('Size of test set: {}\n'.format(test_size))
-    f.write('Dimension of data: {}\n'.format(data_dim))
+    f.write('Dimension of data: {}\n\n'.format(data_dim))
 
 ########################
 # Useful functions
@@ -100,7 +100,7 @@ cov = (cov_0 * X_train_0.shape[0] + cov_1 * X_train_1.shape[0]) / (X_train.shape
 # cov = u@s@vh
 # cov_inv = dot(vh.T * 1 / s, u.T)
 u, s, vh = np.linalg.svd(cov, full_matrices=False)
-s_inv = s
+s_inv = s  # s_inv avoid <1e-8
 for i in range(s.shape[0]):
     if s[i] < (1e-8):
         break
@@ -112,7 +112,8 @@ b = (-0.5) * np.dot(mean_0, np.matmul(cov_inv, mean_0.T)) + (0.5) * np.dot(mean_
 
 # compute accuracy on training set
 Y_train_pred = 1 - _predict(X_train, w, b)
-print('Training accuracy: {}\n'.format(_accuracy(Y_train_pred, Y_train)))
+with open(fpath, 'a') as f:
+    f.write('\nTraining accuracy: {}\n'.format(_accuracy(Y_train_pred, Y_train)))
 
 # Predict
 predictions = 1 - _predict(X_test, w, b)
@@ -121,4 +122,12 @@ with open(output_fpath.format('generative'), 'w') as f:
     for i, label in enumerate(predictions):
         f.write('{}, {}\n'.format(i, label))
 
+# Output the most significant weight
+with open(X_test_fpath) as f:
+    content = f.readline().strip('\n').split(',')
+content = content[1:]
 
+ind = np.argsort(np.abs(np.concatenate(w)))[::-1]
+with open(fpath, 'a')as f:
+    for i in ind[0:10]:
+        f.write('{}: {}\n'.format(content[i], w[i]))
