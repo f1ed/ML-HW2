@@ -1,17 +1,3 @@
----
-title:  「机器学习-李宏毅」：HW2-Binary Income Predicting
-date: 2020/04/15 #
-description: #
-categories: 机器学习-李宏毅
-tags: 
-- 机器学习
-- Classification
-toc: true
-thumbnail: /gallery/thumbnails/80504355_p0_master1200.jpg
-banner: #
-comments: #true or false
----
-
 这篇文章中，手刻实现了「机器学习-李宏毅」的HW2-Binary Income Prediction的作业。分别用Logistic Regression和Generative Model实现。
 包括对数据集的处理，训练模型，可视化，预测等。
 有关HW2的相关数据、源代码、预测结果等，欢迎光临小透明的[GitHub](https://github.com/f1ed/ML-HW2)
@@ -52,7 +38,7 @@ Predict whether the income of an individual exceeds $50000 or not ?
 
 # Logistic Regression
 
-Logistic Regression 原理部分见{% post_link Classification2 这篇博客 %}。
+Logistic Regression 原理部分见[这篇博客](https://f1ed.github.io/2020/04/01/Classification2/)。
 
 ## Prepare data
 
@@ -292,7 +278,7 @@ learning_rate = 0.2
 
 ### Adagrad
 
-Aagrad具体原理见{% post_link Gradient 这篇博客 %}的1.2节。
+Aagrad具体原理见[这篇博客](https://f1ed.github.io/2020/03/01/Gradient/)的1.2节。
 
 迭代更新时，每次epoch计算一次loss和accuracy，以便可视化更新过程，调整参数。
 
@@ -608,7 +594,7 @@ with open(fpath, 'a') as f:
 
 # Generative Model
 
-Generative Model 原理部分见 {% post_link Classification1 这篇博客 %}
+Generative Model 原理部分见[这篇博客](https://f1ed.github.io/2020/03/21/Classification1/)
 
 ## Prepare data
 
@@ -757,7 +743,7 @@ $$
 
 3. 计算 $w,b$ 
 
-   在 {% post_link Classification1 这篇博客%}中的第2小节中的公式推导中， $x^n,\mu$ 都是列向量，公式如下：
+   在 [这篇博客](https://f1ed.github.io/2020/03/21/Classification1/)中的第2小节中的公式推导中， $x^n,\mu$ 都是列向量，公式如下：
 
    {% raw %}
    $$
