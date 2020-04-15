@@ -1,6 +1,7 @@
 这篇文章中，手刻实现了「机器学习-李宏毅」的HW2-Binary Income Prediction的作业。分别用Logistic Regression和Generative Model实现。
 包括对数据集的处理，训练模型，可视化，预测等。
-有关HW2的相关数据、源代码、预测结果等，欢迎光临小透明的[GitHub](https://github.com/f1ed/ML-HW2)
+有关HW2的相关数据、源代码、预测结果等，欢迎光临小透明的[博客](https://github.com/f1ed/ML-HW2)
+主要吧，博客公式显示没问题，GitHub的公式显示还没修QAQ。
 <!--more-->
 # Task introduction and Dataset
 
