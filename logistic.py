@@ -132,7 +132,7 @@ def _gradient(X, Y_label, w, b):
 # Initial weights and bias
 w = np.zeros((data_dim, 1))
 b = np.float(0.)
-w_grad_sum = np.full((data_dim, 1), 0.1)  # avoid divided by zeros
+w_grad_sum = np.full((data_dim, 1), 1e-8)  # avoid divided by zeros
 b_grad_sum = np.float(1e-8)
 
 # Some parameters for training
